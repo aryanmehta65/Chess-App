@@ -1,6 +1,8 @@
 import streamlit as st
 st.markdown("<h1 style ='color:green; text-align:center;'>Checkmate-Chess</h1>",
             unsafe_allow_html=True)
+st.markdown("<h1 style ='color:yellow; text-align:center;'>Welcome</h1>",
+            unsafe_allow_html=True)
 st.write("Login")
 st.text_input("Username")
 st.text_input("Password",type="password")
