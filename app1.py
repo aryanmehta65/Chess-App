@@ -10,9 +10,14 @@ st.header("Login")
 st.text_input("Username")
 st.text_input("Password",type="password")
 if st.button("Login"):
-            st.write("logged in successfuul!")
+            st.write("logged in successfully!")
 st.write("Dont have Account?")
-st.button("Sign in")
+if st.button("Sign in"):
+            st.text_input("Email")
+            st.text_input("Username")
+            st.text_input("Create Password",type="password")
+            if st.button("Submit"):
+                        st.write("Account Created")
 
 
 
