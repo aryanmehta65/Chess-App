@@ -10,7 +10,7 @@ st.header("Login")
 st.text_input("Username")
 st.text_input("Password",type="password")
 st.button("Login")
-col1,col2=st.columns([1,0.3])
+col1,col2=st.columns([1,0.1])
 with col1:
             st.write("Dont have Account?")
 with col2:
