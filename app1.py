@@ -14,11 +14,11 @@ if st.button("Login"):
 st.write("Dont have Account?")
 if st.button("Sign in"):
             with st.form("login_form"):
-            email=st.text_input("Email")
-            username=st.text_input("Create Username")
-            pasword=st.text_input("Create Password",type="password")
-            submit=st.form_submit_buttot("Sign in")
-            if submit:
-                        st.success(f"Welcome{username}")
-
-
+                        email=st.text_input("Email")
+                        username=st.text_input("Create Username")
+                        pasword=st.text_input("Create Password",type="password")
+                        submit=st.form_submit_buttot("Sign in")
+                        if submit:
+                                    st.success(f"Welcome{username}")
+            
+            
