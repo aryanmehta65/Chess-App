@@ -1,4 +1,8 @@
 import streamlit as st
+st.set_page_config(
+            pagr_title="Checkmate-Chess",
+            page_icon="logo.jpeg")#tab icon
+st.image("logo.jpeg",width=120)
 st.markdown("<h1 style ='color:lime; text-align:center;'>Checkmate-Chess</h1>",
             unsafe_allow_html=True)
 st.markdown("<h1 style ='color:yellow; text-align:center;'>Welcome!!</h1>",
