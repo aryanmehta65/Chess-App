@@ -14,7 +14,7 @@ if st.button("Login"):
 st.write("Dont have Account?")
 if st.button("Sign in"):
             st.text_input("Email")
-            st.text_input("Username")
+            st.text_input("Create Username")
             st.text_input("Create Password",type="password")
             if st.button("Submit"):
                         st.write("Account Created")
