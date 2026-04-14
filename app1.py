@@ -17,7 +17,7 @@ if st.button("Sign in"):
                         email=st.text_input("Email")
                         username=st.text_input("Create Username")
                         pasword=st.text_input("Create Password",type="password")
-                        submit=st.form_submit_buttot("Sign in")
+                        submit=st.form_submit_button("Sign in")
                         if submit:
                                     st.success(f"Welcome{username}")
             
