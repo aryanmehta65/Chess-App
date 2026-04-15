@@ -104,16 +104,15 @@ def signup_page():
     password = st.text_input("Create Password", type="password",key="signup_password")
 
     if st.button("Signup", key="signup_btn"):
-    result = signup(username, password)
-
-    if result == "success":
+        result = signup(username, password)
+        if result == "success":
         st.success("Account created! Please login.")
 
-    elif result == "exists":
-        st.error("Username already exists ❌")
+        elif result == "exists":
+            st.error("Username already exists ❌")
 
-    else:
-        st.error("Something went wrong ⚠️")
+        else:
+            st.error("Something went wrong ⚠️")
 
     if st.button("Back to Login",key="back_login"):
         st.session_state.page = "login"
