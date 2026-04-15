@@ -1,7 +1,10 @@
 import streamlit as st
 import json
 import os
-
+st.markdown("<h1 style='text align=center;color=lime;'>Checkmate-Chess</h1>",
+            unsafe_allow_html=True)
+st.markdown("<h1 style='text align=center;color=yellow;'>Welcome!!</h1>",
+            unsafe_allow_html=True)
 # ------------------ FILE SETUP ------------------
 USER_FILE = "users.json"
 
