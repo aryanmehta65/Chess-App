@@ -51,7 +51,7 @@ if "page" not in st.session_state:
 
 # HOME SCREEN
 def home():
-     st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
+    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
                 unsafe_allow_html=True)
     st.success(f"Welcome {st.session_state.username} 🎉")
 
