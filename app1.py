@@ -69,7 +69,7 @@ def login_page():
                             key="login_username")
     password = st.text_input("Password", type="password",
                             key="login_password")
-    st.write("Don't have an account?")
+    
     if st.button("Login",key="login_btn"):
         if login(username, password):
             st.session_state.logged_in = True
@@ -78,7 +78,7 @@ def login_page():
             st.rerun()
         else:
             st.error("Invalid username or password")
-
+    st.write("Don't have an account?")
     if st.button("Go to Signup",key="goto_signup"):
         st.session_state.page = "signup"
         st.rerun()
