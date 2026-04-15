@@ -1,45 +1,20 @@
 import streamlit as st
-import json
-import os
-# ------------------ FILE SETUP ------------------
-USER_FILE = "users.json"
+from supabase import create_client, Client
+import hashlib
 
-if not os.path.exists(USER_FILE):
-    with open(USER_FILE, "w") as f:
-        json.dump({}, f)
+# ---------------- HASH FUNCTION ----------------
+def hash_pass(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
-# ------------------ FUNCTIONS ------------------
-def load_users():
-    with open(USER_FILE, "r") as f:
-        return json.load(f)
+# ---------------- SUPABASE SETUP ----------------
+url = "https://acspvvfxhputejndpluk.supabase.co"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjc3B2dmZ4aHB1dGVqbmRwbHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTk5MjksImV4cCI6MjA5MTgzNTkyOX0.u6QA3HI2ZsAVR4cbpUuKZAULkBH96VMrkRPU5FWN3As"
 
-def save_users(users):
-    with open(USER_FILE, "w") as f:
-        json.dump(users, f)
+supabase: Client = create_client(url, key)
 
 
-def signup(username, password):
-    users = load_users()
-    
-    if username in users:
-        return False  # username already exists
-    
-    users[username] = password
-    save_users(users)
-    return True
-
-
-def login(username, password):
-    users = load_users()
-    
-    if username in users and users[username] == password:
-        return True
-    
-    return False
-
-
-# ------------------ SESSION ------------------
+# ---------------- SESSION ----------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
@@ -47,20 +22,42 @@ if "page" not in st.session_state:
     st.session_state.page = "login"
 
 
-# ------------------ UI ------------------
+# ---------------- FUNCTIONS ----------------
+def signup(username, password):
+    password = hash_pass(password)  # 🔐 hash password
 
-# HOME SCREEN
+    try:
+        supabase.table("users").insert({
+            "username": username,
+            "password": password
+        }).execute()
+        return True
+    except:
+        return False  # username already exists
+
+
+def login(username, password):
+    password = hash_pass(password)  # 🔐 hash input
+
+    data = supabase.table("users").select("*").eq("username", username).execute()
+
+    if data.data:
+        if data.data[0]["password"] == password:
+            return True
+    return False
+
+
+# ---------------- PAGES ----------------
 def home():
-    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
-                unsafe_allow_html=True)
+    st.title("🏠 Home Screen")
     st.success(f"Welcome {st.session_state.username} 🎉")
 
     if st.button("Logout"):
         st.session_state.logged_in = False
         st.session_state.page = "login"
+        st.rerun()
 
 
-# LOGIN PAGE
 def login_page():
     st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
                 unsafe_allow_html=True)
@@ -85,7 +82,6 @@ def login_page():
         st.rerun()
 
 
-# SIGNUP PAGE
 def signup_page():
     st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
                 unsafe_allow_html=True)
@@ -107,8 +103,7 @@ def signup_page():
         st.rerun()
 
 
-# ------------------ PAGE CONTROL ------------------
-
+# ---------------- MAIN ----------------
 if st.session_state.logged_in:
     home()
 else:
@@ -116,4 +111,12 @@ else:
         login_page()
     elif st.session_state.page == "signup":
         signup_page()
-            
+
+# ---------------- MAIN ----------------
+if st.session_state.logged_in:
+    home()
+else:
+    if st.session_state.page == "login":
+        login_page()
+    elif st.session_state.page == "signup":
+        signup_page()
