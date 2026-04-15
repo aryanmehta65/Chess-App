@@ -24,16 +24,21 @@ if "page" not in st.session_state:
 
 # ---------------- FUNCTIONS ----------------
 def signup(username, password):
-    password = hash_pass(password)  # 🔐 hash password
+    password = hash_pass(password)
 
-    try:
-        supabase.table("users").insert({
-            "username": username,
-            "password": password
-        }).execute()
-        return True
-    except:
-        return False  # username already exists
+    # 🔍 check if user already exists
+    existing = supabase.table("users").select("*").eq("username", username).execute()
+
+    if existing.data:
+        return "exists"   # username already taken
+
+    # ✅ insert new user
+    supabase.table("users").insert({
+        "username": username,
+        "password": password
+    }).execute()
+
+    return "success"
 
 
 def login(username, password):
