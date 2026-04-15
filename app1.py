@@ -61,10 +61,12 @@ def home():
 def login_page():
     st.title("🔐 Login")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    username = st.text_input("Username",
+                            key="login_username")
+    password = st.text_input("Password", type="password",
+                            key="login_password")
 
-    if st.button("Login"):
+    if st.button("Login",key="login_btn"):
         if login(username, password):
             st.session_state.logged_in = True
             st.session_state.username = username
@@ -73,7 +75,7 @@ def login_page():
         else:
             st.error("Invalid username or password")
 
-    if st.button("Go to Signup"):
+    if st.button("Go to Signup",key="goto_signup"):
         st.session_state.page = "signup"
         st.rerun()
 
@@ -81,16 +83,16 @@ def login_page():
 def signup_page():
     st.title("📝 Signup")
 
-    username = st.text_input("Create Username")
-    password = st.text_input("Create Password", type="password")
+    username = st.text_input("Create Username",key="signup_username")
+    password = st.text_input("Create Password", type="password",key="signup_password")
 
-    if st.button("Signup"):
+    if st.button("Signup",key="signup_btn"):
         if signup(username, password):
             st.success("Account created! Please login.")
         else:
             st.error("Username already exists ❌")
 
-    if st.button("Back to Login"):
+    if st.button("Back to Login",key="back_login"):
         st.session_state.page = "login"
         st.rerun()
 
