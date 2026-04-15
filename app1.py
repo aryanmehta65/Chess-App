@@ -106,7 +106,7 @@ def signup_page():
     if st.button("Signup", key="signup_btn"):
         result = signup(username, password)
         if result == "success":
-        st.success("Account created! Please login.")
+            st.success("Account created! Please login.")
 
         elif result == "exists":
             st.error("Username already exists ❌")
