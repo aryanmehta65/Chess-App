@@ -59,10 +59,6 @@ def home():
 
 
 def login_page():
-    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
-                unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>",
-                unsafe_allow_html=True)
     st.title("🔐 Login")
 
     username = st.text_input("Username")
@@ -83,10 +79,6 @@ def login_page():
 
 
 def signup_page():
-    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
-                unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>",
-                unsafe_allow_html=True)
     st.title("📝 Signup")
 
     username = st.text_input("Create Username")
