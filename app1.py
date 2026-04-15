@@ -106,11 +106,3 @@ else:
     elif st.session_state.page == "signup":
         signup_page()
 
-# ---------------- MAIN ----------------
-if st.session_state.logged_in:
-    home()
-else:
-    if st.session_state.page == "login":
-        login_page()
-    elif st.session_state.page == "signup":
-        signup_page()
