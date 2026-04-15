@@ -26,19 +26,23 @@ if "page" not in st.session_state:
 def signup(username, password):
     password = hash_pass(password)
 
-    # 🔍 check if user already exists
-    existing = supabase.table("users").select("*").eq("username", username).execute()
+    try:
+        # 🔍 check if username exists
+        existing = supabase.table("users").select("*").eq("username", username).execute()
 
-    if existing.data:
-        return "exists"   # username already taken
+        if existing.data:
+            return "exists"
 
-    # ✅ insert new user
-    supabase.table("users").insert({
-        "username": username,
-        "password": password
-    }).execute()
+        # ✅ insert new user
+        supabase.table("users").insert({
+            "username": username,
+            "password": password
+        }).execute()
 
-    return "success"
+        return "success"
+
+    except Exception as e:
+        return "error"
 
 
 def login(username, password):
@@ -99,11 +103,17 @@ def signup_page():
     username = st.text_input("Create Username",key="signup_username")
     password = st.text_input("Create Password", type="password",key="signup_password")
 
-    if st.button("Signup",key="signup_btn"):
-        if signup(username, password):
-            st.success("Account created! Please login.")
-        else:
-            st.error("Username already exists ❌")
+    if st.button("Signup", key="signup_btn"):
+    result = signup(username, password)
+
+    if result == "success":
+        st.success("Account created! Please login.")
+
+    elif result == "exists":
+        st.error("Username already exists ❌")
+
+    else:
+        st.error("Something went wrong ⚠️")
 
     if st.button("Back to Login",key="back_login"):
         st.session_state.page = "login"
