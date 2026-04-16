@@ -24,17 +24,15 @@ if "page" not in st.session_state:
 
 # ---------------- FUNCTIONS ----------------
 def signup(username, password):
-    username=username.strip()
+    username = username.strip()
     password = hash_pass(password)
 
     try:
-        # 🔍 check if username exists
         existing = supabase.table("users").select("*").eq("username", username).execute()
 
         if existing.data:
             return "exists"
 
-        # ✅ insert new user
         supabase.table("users").insert({
             "username": username,
             "password": password
@@ -43,11 +41,12 @@ def signup(username, password):
         return "success"
 
     except Exception as e:
+        st.write(e)
         return "error"
 
 
 def login(username, password):
-    username = username.strip()   # remove spaces
+    username = username.strip()
     password = hash_pass(password)
 
     data = supabase.table("users").select("*").eq("username", username).execute()
@@ -75,45 +74,45 @@ def home():
 
 
 def login_page():
-    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
-                unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>",
-                unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>", unsafe_allow_html=True)
     st.title("🔐 Login")
 
-    username = st.text_input("Username",
-                            key="login_username")
-    password = st.text_input("Password", type="password",
-                            key="login_password")
-    
+    username = st.text_input("Username", key="login_username")
+    password = st.text_input("Password", type="password", key="login_password")
+
     if st.button("Login", key="login_btn"):
         result = login(username, password)
 
-    if result == True:
-        st.session_state.logged_in = True
-        st.session_state.username = username
-        st.session_state.page = "home"
+        if result == True:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.session_state.page = "home"
+            st.rerun()
+
+        elif result == "wrong_password":
+            st.error("Wrong password ❌")
+
+        else:
+            st.error("Username not found ❌")
+
+    st.write("Don't have an account?")
+    if st.button("Sign up", key="goto_signup"):
+        st.session_state.page = "signup"
         st.rerun()
-
-    elif result == "wrong_password":
-        st.error("Wrong password ❌")
-
-    else:
-        st.error("Username not found ❌")
 
 
 def signup_page():
-    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>",
-                unsafe_allow_html=True)
-    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>",
-                unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:yellow;'>Welcome!!</h1>", unsafe_allow_html=True)
     st.title("📝 Signup")
 
-    username = st.text_input("Create Username",key="signup_username")
-    password = st.text_input("Create Password", type="password",key="signup_password")
+    username = st.text_input("Create Username", key="signup_username")
+    password = st.text_input("Create Password", type="password", key="signup_password")
 
     if st.button("Signup", key="signup_btn"):
         result = signup(username, password)
+
         if result == "success":
             st.success("Account created! Please login.")
 
@@ -123,7 +122,7 @@ def signup_page():
         else:
             st.error("Something went wrong ⚠️")
 
-    if st.button("Back to Login",key="back_login"):
+    if st.button("Back to Login", key="back_login"):
         st.session_state.page = "login"
         st.rerun()
 
@@ -136,4 +135,3 @@ else:
         login_page()
     elif st.session_state.page == "signup":
         signup_page()
-
