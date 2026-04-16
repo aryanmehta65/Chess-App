@@ -8,8 +8,8 @@ def hash_pass(password):
 
 
 # ---------------- SUPABASE SETUP ----------------
-url = "https://acspvvfxhputejndpluk.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjc3B2dmZ4aHB1dGVqbmRwbHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTk5MjksImV4cCI6MjA5MTgzNTkyOX0.u6QA3HI2ZsAVR4cbpUuKZAULkBH96VMrkRPU5FWN3As"
+url = st.secrets["https://acspvvfxhputejndpluk.supabase.co"]
+key = st.secrets["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjc3B2dmZ4aHB1dGVqbmRwbHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNTk5MjksImV4cCI6MjA5MTgzNTkyOX0.u6QA3HI2ZsAVR4cbpUuKZAULkBH96VMrkRPU5FWN3As"]
 
 supabase: Client = create_client(url, key)
 
