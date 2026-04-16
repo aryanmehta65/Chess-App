@@ -24,6 +24,7 @@ if "page" not in st.session_state:
 
 # ---------------- FUNCTIONS ----------------
 def signup(username, password):
+    username=username.strip()
     password = hash_pass(password)
 
     try:
@@ -46,14 +47,20 @@ def signup(username, password):
 
 
 def login(username, password):
-    password = hash_pass(password)  # 🔐 hash input
+    username = username.strip()   # remove spaces
+    password = hash_pass(password)
 
     data = supabase.table("users").select("*").eq("username", username).execute()
 
     if data.data:
-        if data.data[0]["password"] == password:
+        db_password = data.data[0]["password"]
+
+        if db_password == password:
             return True
-    return False
+        else:
+            return "wrong_password"
+
+    return "no_user"
 
 
 # ---------------- PAGES ----------------
@@ -79,18 +86,20 @@ def login_page():
     password = st.text_input("Password", type="password",
                             key="login_password")
     
-    if st.button("Login",key="login_btn"):
-        if login(username, password):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.page = "home"
-            st.rerun()
-        else:
-            st.error("Invalid username or password")
-    st.write("Don't have an account?")
-    if st.button("Go to Signup",key="goto_signup"):
-        st.session_state.page = "signup"
+    if st.button("Login", key="login_btn"):
+        result = login(username, password)
+
+    if result == True:
+        st.session_state.logged_in = True
+        st.session_state.username = username
+        st.session_state.page = "home"
         st.rerun()
+
+    elif result == "wrong_password":
+        st.error("Wrong password ❌")
+
+    else:
+        st.error("Username not found ❌")
 
 
 def signup_page():
