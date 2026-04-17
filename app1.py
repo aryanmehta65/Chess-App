@@ -6,7 +6,7 @@ import chess.engine
 import os
 import urllib.request
 import zipfile
-from streamlit_chess import st_chess
+import streamlit.components.v1 as components
 
 # ---------------- HASH ----------------
 def hash_pass(password):
@@ -109,35 +109,45 @@ def bot_page():
 
     rating = st.slider("Engine Rating", 400, 2000, 800, step=100)
 
-    board = st.session_state.board
+    if "board_fen" not in st.session_state:
+        st.session_state.board_fen = "start"
 
-    # REAL CHESS BOARD
-    move = st_chess(board)
+    # 🧠 HTML Chessboard
+    chess_html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.css">
+    </head>
+    <body>
+
+    <div id="board" style="width: 100%"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.js"></script>
+
+    <script>
+        var board = Chessboard('board', {{
+            draggable: true,
+            position: "{st.session_state.board_fen}",
+            onDrop: onDrop
+        }});
+
+        function onDrop(source, target) {{
+            var move = source + target;
+            window.parent.postMessage(move, "*");
+        }}
+    </script>
+
+    </body>
+    </html>
+    """
+
+    move = components.html(chess_html, height=500)
 
     if move:
-        try:
-            board.push_uci(move)
-
-            download_stockfish()
-            engine = chess.engine.SimpleEngine.popen_uci("./stockfish")
-
-            skill = int((rating - 400) / 80)
-            skill = max(0, min(skill, 20))
-
-            engine.configure({"Skill Level": skill})
-
-            result = engine.play(board, chess.engine.Limit(time=0.2))
-            board.push(result.move)
-
-            engine.quit()
-
-            st.session_state.board = board
-
-        except:
-            st.error("Invalid move ❌")
-
-    if st.button("Reset Game"):
-        st.session_state.board = chess.Board()
+        st.write("Move:", move)
 
     if st.button("Back"):
         st.session_state.page = "home"
