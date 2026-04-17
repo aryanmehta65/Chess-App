@@ -6,9 +6,9 @@ import chess.engine
 import os
 import urllib.request
 import zipfile
----------------- HASH FUNCTION ----------------
+#---------------- HASH FUNCTION ----------------
 
-def hash_pass(password):
+def hash_pass(password):33
 return hashlib.sha256(password.encode()).hexdigest()
 
 ---------------- SUPABASE ----------------
@@ -17,7 +17,7 @@ url = st.secrets["SUPABASE_URL"]
 key = st.secrets["SUPABASE_KEY"]
 supabase: Client = create_client(url, key)
 
----------------- SESSION ----------------
+#---------------- SESSION ----------------
 
 if "logged_in" not in st.session_state:
 st.session_state.logged_in = False
@@ -25,7 +25,7 @@ st.session_state.logged_in = False
 if "page" not in st.session_state:
 st.session_state.page = "login"
 
----------------- FUNCTIONS ----------------
+#---------------- FUNCTIONS ----------------
 
 def signup(username, password):
 username = username.strip()
@@ -57,7 +57,7 @@ if data.data:
 
 return "no_user"
 
----------------- HOME ----------------
+#---------------- HOME ----------------
 
 def home():
 col1, col2, col3 = st.columns([1,3,1])
@@ -88,7 +88,7 @@ if st.button("Logout"):
     st.session_state.page = "login"  
     st.rerun()
 
----------------- BOT ----------------
+#---------------- BOT ----------------
 def download_stockfish():
     if not os.path.exists("stockfish"):
         url = "https://stockfishchess.org/files/stockfish_15_linux_x64_avx2.zip"
@@ -151,7 +151,7 @@ def bot_page():
         st.session_state.page = "home"
         st.rerun()
 
----------------- FRIENDS ----------------
+#---------------- FRIENDS ----------------
 
 def friend_page():
 st.title("👥 Add Friend")
@@ -191,7 +191,7 @@ if st.button("Back"):
     st.session_state.page = "home"  
     st.rerun()
 
----------------- NOTIFICATIONS ----------------
+#---------------- NOTIFICATIONS ----------------
 
 def show_notifications():
 st.subheader("🔔 Notifications")
@@ -206,7 +206,7 @@ if data.data:
 else:  
     st.write("No notifications")
 
----------------- LOGIN ----------------
+#---------------- LOGIN ----------------
 
 def login_page():
 st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>", unsafe_allow_html=True)
@@ -236,7 +236,7 @@ if st.button("Sign up"):
     st.session_state.page = "signup"  
     st.rerun()
 
----------------- SIGNUP ----------------
+#---------------- SIGNUP ----------------
 
 def signup_page():
 st.markdown("<h1 style='text-align:center;color:lime;'>Checkmate-Chess</h1>", unsafe_allow_html=True)
@@ -262,7 +262,7 @@ if st.button("Back to Login"):
     st.session_state.page = "login"  
     st.rerun()
 
----------------- MAIN ----------------
+#---------------- MAIN ----------------
 
 if st.session_state.logged_in:
 if st.session_state.page == "home":
