@@ -11,7 +11,7 @@ import zipfile
 def hash_pass(password):33
 return hashlib.sha256(password.encode()).hexdigest()
 
----------------- SUPABASE ----------------
+#---------------- SUPABASE ----------------
 
 url = st.secrets["SUPABASE_URL"]
 key = st.secrets["SUPABASE_KEY"]
