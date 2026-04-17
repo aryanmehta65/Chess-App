@@ -105,49 +105,64 @@ def home():
 
 # ---------------- BOT ----------------
 def bot_page():
+    import chess
+    import chess.engine
+    import os
+    import urllib.request
+    import zipfile
+
     st.title("♟️ Play with Bot")
 
     rating = st.slider("Engine Rating", 400, 2000, 800, step=100)
 
-    if "board_fen" not in st.session_state:
-        st.session_state.board_fen = "start"
+    # init board
+    if "board" not in st.session_state:
+        st.session_state.board = chess.Board()
 
-    # 🧠 HTML Chessboard
-    chess_html = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.css">
-    </head>
-    <body>
+    board = st.session_state.board
 
-    <div id="board" style="width: 100%"></div>
+    st.text(board)  # simple but stable
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard.min.js"></script>
+    # show legal moves
+    moves = [move.uci() for move in board.legal_moves]
 
-    <script>
-        var board = Chessboard('board', {{
-            draggable: true,
-            position: "{st.session_state.board_fen}",
-            onDrop: onDrop
-        }});
+    move = st.selectbox("Choose your move", moves)
 
-        function onDrop(source, target) {{
-            var move = source + target;
-            window.parent.postMessage(move, "*");
-        }}
-    </script>
+    if st.button("Play Move"):
+        board.push_uci(move)
 
-    </body>
-    </html>
-    """
+        # download engine
+        if not os.path.exists("stockfish"):
+            url = "https://stockfishchess.org/files/stockfish_15_linux_x64_avx2.zip"
+            urllib.request.urlretrieve(url, "stockfish.zip")
 
-    move = components.html(chess_html, height=500)
+            with zipfile.ZipFile("stockfish.zip", 'r') as zip_ref:
+                zip_ref.extractall()
 
-    if move:
-        st.write("Move:", move)
+            for file in os.listdir():
+                if "stockfish" in file and not file.endswith(".zip"):
+                    os.rename(file, "stockfish")
+
+            os.chmod("stockfish", 0o755)
+
+        engine = chess.engine.SimpleEngine.popen_uci("./stockfish")
+
+        skill = int((rating - 400) / 80)
+        skill = max(0, min(skill, 20))
+
+        engine.configure({"Skill Level": skill})
+
+        result = engine.play(board, chess.engine.Limit(time=0.2))
+        board.push(result.move)
+
+        engine.quit()
+
+        st.session_state.board = board
+        st.rerun()
+
+    if st.button("Reset Game"):
+        st.session_state.board = chess.Board()
+        st.rerun()
 
     if st.button("Back"):
         st.session_state.page = "home"
